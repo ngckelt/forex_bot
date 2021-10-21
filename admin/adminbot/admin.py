@@ -10,4 +10,9 @@ class ClientsAdmin(admin.ModelAdmin):
         model = models.Clients
 
 
+@admin.register(models.BotAdmins)
+class BotAdminsAdmin(admin.ModelAdmin):
+    list_display = ['telegram_id', 'active']
 
+    class Meta:
+        model = models.BotAdmins

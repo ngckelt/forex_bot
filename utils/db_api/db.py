@@ -15,6 +15,19 @@ class ClientsModel:
     def update_client(telegram_id, **update_data):
         Clients.objects.filter(telegram_id=telegram_id).update(**update_data)
 
+    @staticmethod
+    def get_clients():
+        return Clients.objects.all()
 
+
+class BotAdminsModel:
+
+    @staticmethod
+    def get_bot_admins():
+        return BotAdmins.objects.all()
+
+    @staticmethod
+    def get_active_bot_admins():
+        return BotAdmins.objects.filter(active=True)
 
 
