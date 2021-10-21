@@ -30,4 +30,8 @@ class BotAdminsModel:
     def get_active_bot_admins():
         return BotAdmins.objects.filter(active=True)
 
+    @staticmethod
+    def get_active_bot_admin():
+        return BotAdmins.objects.filter(active=True).first()
+
 

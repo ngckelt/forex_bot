@@ -11,13 +11,14 @@ class TimeBasedModel(models.Model):
 
 class Users(TimeBasedModel):
     telegram_id = models.CharField(verbose_name="ID в телеграмме", max_length=255)
+    username = models.CharField(verbose_name="Юзернейм в телеграмме", max_length=255, blank=True)
 
     class Meta:
         abstract = True
 
 
 class Clients(Users):
-    account = models.PositiveBigIntegerField(verbose_name="Счет", default=0)
+    deposit = models.PositiveBigIntegerField(verbose_name="Счет", default=0)
 
     class Meta:
         verbose_name = "Пользователь бота"

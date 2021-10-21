@@ -4,7 +4,7 @@ from . import models
 
 @admin.register(models.Clients)
 class ClientsAdmin(admin.ModelAdmin):
-    list_display = ['telegram_id', 'account']
+    list_display = ['telegram_id', 'deposit']
 
     class Meta:
         model = models.Clients
@@ -16,3 +16,6 @@ class BotAdminsAdmin(admin.ModelAdmin):
 
     class Meta:
         model = models.BotAdmins
+
+
+

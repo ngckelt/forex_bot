@@ -6,5 +6,7 @@ class NotifyClients(StatesGroup):
     ask_photo = State()
     get_photo = State()
     confirm = State()
+    get_failed_deposit_update_reason = State()
+    get_failed_withdrawal_reason = State()
 
 
