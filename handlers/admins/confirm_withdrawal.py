@@ -11,6 +11,7 @@ from states.admins import NotifyClients
 
 @dp.callback_query_handler(AdminOnly(), confirm_withdrawal_callback.filter())
 async def confirm_withdrawal(callback: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    await callback.answer()
     choice = callback_data.get('choice')
     amount = callback_data.get('amount')
     client_telegram_id = callback_data.get('client_telegram_id')
