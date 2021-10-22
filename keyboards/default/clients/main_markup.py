@@ -7,7 +7,8 @@ main_markup = ReplyKeyboardMarkup(
             KeyboardButton(text="Депозит")
         ],
         [
-            KeyboardButton(text="Вывод средств")
+            KeyboardButton(text="Вывод средств"),
+            KeyboardButton(text="Реферальная ссылка")
         ]
     ],
     resize_keyboard=True

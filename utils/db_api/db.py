@@ -4,8 +4,11 @@ from admin.adminbot.models import *
 class ClientsModel:
 
     @staticmethod
-    def add_client(telegram_id, **data):
-        Clients.objects.create(telegram_id=telegram_id, **data)
+    def add_client(telegram_id, username, **data):
+        if username:
+            Clients.objects.create(telegram_id=telegram_id, username=username, **data)
+        else:
+            Clients.objects.create(telegram_id=telegram_id, **data)
 
     @staticmethod
     def get_client_by_telegram_id(telegram_id):

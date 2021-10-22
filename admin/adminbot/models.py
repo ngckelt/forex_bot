@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 
 class TimeBasedModel(models.Model):
@@ -19,10 +20,19 @@ class Users(TimeBasedModel):
 
 class Clients(Users):
     deposit = models.PositiveBigIntegerField(verbose_name="Счет", default=0)
+    last_update_deposit_date = models.DateField(verbose_name="Последняя дата пополнения депозита", default=now)
 
     class Meta:
         verbose_name = "Пользователь бота"
         verbose_name_plural = "Пользователи бота"
+
+
+class Referrals(Users):
+    referrer = models.ForeignKey(Clients, verbose_name="Реферер", on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Реферал"
+        verbose_name_plural = "Рефералы"
 
 
 class BotAdmins(Users):

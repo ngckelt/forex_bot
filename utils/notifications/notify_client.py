@@ -17,7 +17,7 @@ async def notify_client_about_success_withdrawal(client_telegram_id, amount):
 
 
 async def notify_client_about_failed_withdrawal(client_telegram_id, amount, reason_text):
-    text = f"Ваш запрос на пополнение {amount} руб. не принят\nПричина: {reason_text}"
+    text = f"Ваш запрос на вывод {amount} руб. не принят\nПричина: {reason_text}"
     await send_message(client_telegram_id, text)
 
 
