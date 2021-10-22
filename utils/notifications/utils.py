@@ -9,7 +9,6 @@ async def send_message(chat_id, text, reply_markup=None):
             reply_markup=reply_markup
         )
     except Exception as e:
-        print(e, e.__class__)
-        # raise ValueError(f"Cannot send data to user {chat_id}")
+        raise ValueError(f"Cannot send data to user {chat_id}")
 
 
