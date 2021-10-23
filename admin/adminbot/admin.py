@@ -31,7 +31,26 @@ class ReferralsAdmin(admin.ModelAdmin):
 @admin.register(models.Deposits)
 class DepositsAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'datetime', 'telegram_id', 'amount', 'card_number']
+    search_fields = ['first_name', 'last_name', 'username', 'telegram_id']
 
     class Meta:
         model = models.Deposits
+
+
+@admin.register(models.Withdrawals)
+class DepositsAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'datetime', 'telegram_id', 'amount', 'card_number']
+    search_fields = ['first_name', 'last_name', 'username', 'telegram_id']
+
+    class Meta:
+        model = models.Withdrawals
+
+
+@admin.register(models.ReferralAccruals)
+class ReferralAccrualsAdmin(admin.ModelAdmin):
+    list_display = ['amount', 'accrual_to', 'accrual_from', 'datetime']
+    search_fields = ['accrual_to', 'accrual_from']
+
+    class Meta:
+        model = models.ReferralAccruals
 

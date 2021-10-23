@@ -52,7 +52,7 @@ class BotAdmins(Users):
         verbose_name_plural = "Админы бота"
 
 
-class Deposits(TimeBasedModel):
+class DepositsManage(TimeBasedModel):
     telegram_id = models.CharField(verbose_name="ID в телеграмме", max_length=255)
     username = models.CharField(verbose_name="Юзернейм в телеграмме", max_length=255, blank=True)
     first_name = models.CharField(verbose_name="Имя", max_length=255)
@@ -66,14 +66,30 @@ class Deposits(TimeBasedModel):
         return f"{self.last_name} {self.first_name}"
 
     class Meta:
+        abstract = True
+
+
+class Deposits(DepositsManage):
+
+    class Meta:
         verbose_name = "Пополнение"
         verbose_name_plural = "Пополнения"
 
 
-class Withdrawals:
-    ...
+class Withdrawals(DepositsManage):
+
+    class Meta:
+        verbose_name = "Вывод"
+        verbose_name_plural = "Выводы"
 
 
-class ReferralAccruals:
-    ...
+class ReferralAccruals(TimeBasedModel):
+    amount = models.FloatField(verbose_name="Сумма", validators=[MinValueValidator(0.0)])
+    accrual_to = models.CharField(verbose_name="Кому начислено", max_length=255)
+    accrual_from = models.CharField(verbose_name="За кого начислено", max_length=255)
+    datetime = models.DateTimeField(verbose_name="Дата и время")
+
+    class Meta:
+        verbose_name = "Реферальное начисление"
+        verbose_name_plural = "Реферальные начисления"
 
