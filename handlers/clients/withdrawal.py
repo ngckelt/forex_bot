@@ -18,7 +18,7 @@ async def funds_off(message: types.Message):
 @dp.message_handler(state=Withdrawal.get_withdrawal_amount)
 async def get_withdrawal_amount(message: types.Message, state: FSMContext):
     amount = message.text.replace(' ', '')
-    client = ClientsModel.get_client_by_telegram_id(message.from_user.id)
+    client = await ClientsModel.get_client_by_telegram_id(message.from_user.id)
 
     try:
         amount = int(amount)

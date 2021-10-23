@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.timezone import now
 
@@ -19,7 +20,7 @@ class Users(TimeBasedModel):
 
 
 class Clients(Users):
-    deposit = models.PositiveBigIntegerField(verbose_name="Счет", default=0)
+    deposit = models.FloatField(verbose_name="Баланс", default=0, validators=[MinValueValidator(0.0)])
     last_update_deposit_date = models.DateField(verbose_name="Последняя дата пополнения депозита", default=now)
 
     class Meta:

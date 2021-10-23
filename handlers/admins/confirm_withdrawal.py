@@ -15,7 +15,7 @@ async def confirm_withdrawal(callback: types.CallbackQuery, callback_data: dict,
     choice = callback_data.get('choice')
     amount = callback_data.get('amount')
     client_telegram_id = callback_data.get('client_telegram_id')
-    client = ClientsModel.get_client_by_telegram_id(client_telegram_id)
+    client = await ClientsModel.get_client_by_telegram_id(client_telegram_id)
 
     if choice == 'confirm':
         ClientsModel.update_client(client_telegram_id, deposit=client.deposit - int(amount))

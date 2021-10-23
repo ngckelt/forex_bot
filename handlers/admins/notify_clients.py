@@ -81,7 +81,7 @@ async def send_data(callback: types.CallbackQuery, callback_data: dict, state: F
         for image in images:
             album.attach_photo(image)
 
-        clients = ClientsModel.get_clients()
+        clients = await ClientsModel.get_clients()
 
         for client in clients:
             try:

@@ -10,22 +10,15 @@ from utils.db_api.db import ClientsModel
 async def start(message: types.Message):
     referer_telegram_id = message.get_args()
     if referer_telegram_id:
-        referer = ClientsModel.get_client_by_telegram_id(referer_telegram_id)
+        referer = await ClientsModel.get_client_by_telegram_id(referer_telegram_id)
     await message.answer(
         text="Тут будет общая информация о владельце бота и услугах которые предоставляет.",
         reply_markup=main_markup
     )
 
-    # ClientsModel.add_client(
-    #     message.from_user.id,
-    #     username=message.from_user.username,
-    #     last_update_deposit_date=datetime.now()
-    # )
+    await ClientsModel.add_client(
+        message.from_user.id,
+        username=message.from_user.username,
+        last_update_deposit_date=datetime.now()
+    )
 
-
-"""
-И скорей всего еще добавиться рефералка
-- получение ссылки
-- начисление бонуса 2% от приведенных рефералом денег
-- информирование о начислении бонусов реферера и администратора.
-"""
