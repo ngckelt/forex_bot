@@ -20,4 +20,9 @@ class BotAdminsAdmin(admin.ModelAdmin):
         model = models.BotAdmins
 
 
+@admin.register(models.Referrals)
+class ReferralsAdmin(admin.ModelAdmin):
+    list_display = ['referrer']
 
+    class Meta:
+        model = models.Referrals

@@ -15,11 +15,19 @@ class Users(TimeBasedModel):
     telegram_id = models.CharField(verbose_name="ID в телеграмме", max_length=255)
     username = models.CharField(verbose_name="Юзернейм в телеграмме", max_length=255, blank=True)
 
+    def __str__(self):
+        return self.telegram_id
+
     class Meta:
         abstract = True
 
 
 class Clients(Users):
+    referer = models.CharField(verbose_name="Приведен пользователем", max_length=30, blank=True)
+    first_name = models.CharField(verbose_name="Имя", max_length=255)
+    last_name = models.CharField(verbose_name="Фамилия", max_length=255)
+    middle_name = models.CharField(verbose_name="Отчество", max_length=255)
+    card_number = models.CharField(verbose_name="Номер карты", max_length=16)
     deposit = models.FloatField(verbose_name="Баланс", default=0, validators=[MinValueValidator(0.0)])
     last_update_deposit_date = models.DateField(verbose_name="Последняя дата пополнения депозита", default=now)
 

@@ -6,11 +6,17 @@ class ClientsModel:
 
     @staticmethod
     @sync_to_async
-    def add_client(telegram_id, username, **data):
+    def add_client(telegram_id, username, referer, **data):
         if username:
-            Clients.objects.create(telegram_id=telegram_id, username=username, **data)
+            if referer:
+                Clients.objects.create(telegram_id=telegram_id, username=username, referer=referer, **data)
+            else:
+                Clients.objects.create(telegram_id=telegram_id, username=username, **data)
         else:
-            Clients.objects.create(telegram_id=telegram_id, **data)
+            if referer:
+                Clients.objects.create(telegram_id=telegram_id, referer=referer, **data)
+            else:
+                Clients.objects.create(telegram_id=telegram_id, **data)
 
     @staticmethod
     @sync_to_async
@@ -44,5 +50,23 @@ class BotAdminsModel:
     @sync_to_async
     def get_active_bot_admin():
         return BotAdmins.objects.filter(active=True).first()
+
+
+class ReferralsModel:
+
+    @staticmethod
+    @sync_to_async
+    def add_referral(referrer, referral_telegram_id, referral_username):
+        if referral_username:
+            Referrals.objects.create(
+                referrer=referrer,
+                telegram_id=referral_telegram_id,
+                username=referral_username
+            )
+        else:
+            Referrals.objects.create(
+                referrer=referrer,
+                telegram_id=referral_telegram_id,
+            )
 
 
