@@ -52,4 +52,28 @@ class BotAdmins(Users):
         verbose_name_plural = "Админы бота"
 
 
+class Deposits(TimeBasedModel):
+    telegram_id = models.CharField(verbose_name="ID в телеграмме", max_length=255)
+    username = models.CharField(verbose_name="Юзернейм в телеграмме", max_length=255, blank=True)
+    first_name = models.CharField(verbose_name="Имя", max_length=255)
+    last_name = models.CharField(verbose_name="Фамилия", max_length=255)
+    middle_name = models.CharField(verbose_name="Отчество", max_length=255)
+    datetime = models.DateTimeField(verbose_name="Дата и время")
+    amount = models.FloatField(verbose_name="Сумма", validators=[MinValueValidator(0.0)])
+    card_number = models.CharField(verbose_name="Номер карты", max_length=16)
+
+    def __str__(self):
+        return f"{self.last_name} {self.first_name}"
+
+    class Meta:
+        verbose_name = "Пополнение"
+        verbose_name_plural = "Пополнения"
+
+
+class Withdrawals:
+    ...
+
+
+class ReferralAccruals:
+    ...
 

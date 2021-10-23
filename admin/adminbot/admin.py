@@ -4,7 +4,7 @@ from . import models
 
 @admin.register(models.Clients)
 class ClientsAdmin(admin.ModelAdmin):
-    list_display = ['telegram_id', 'deposit']
+    list_display = ['telegram_id', 'deposit', 'username', 'referer', 'first_name', 'last_name']
     search_fields = ['telegram_id']
 
     class Meta:
@@ -26,3 +26,12 @@ class ReferralsAdmin(admin.ModelAdmin):
 
     class Meta:
         model = models.Referrals
+
+
+@admin.register(models.Deposits)
+class DepositsAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'datetime', 'telegram_id', 'amount', 'card_number']
+
+    class Meta:
+        model = models.Deposits
+

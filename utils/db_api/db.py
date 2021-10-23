@@ -33,6 +33,11 @@ class ClientsModel:
     def get_clients():
         return Clients.objects.all()
 
+    @staticmethod
+    @sync_to_async
+    def get_referrals(client):
+        return Referrals.objects.filter(referrer=client)
+
 
 class BotAdminsModel:
 
