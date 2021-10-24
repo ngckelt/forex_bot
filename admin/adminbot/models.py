@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.timezone import now
+from datetime import datetime
 
 
 class TimeBasedModel(models.Model):
@@ -29,7 +30,8 @@ class Clients(Users):
     middle_name = models.CharField(verbose_name="Отчество", max_length=255)
     card_number = models.CharField(verbose_name="Номер карты", max_length=20)
     deposit = models.FloatField(verbose_name="Баланс", default=0, validators=[MinValueValidator(0.0)])
-    last_update_deposit_date = models.DateField(verbose_name="Последняя дата пополнения депозита", default=now)
+    last_update_deposit_date = models.DateTimeField(verbose_name="Последняя дата пополнения депозита",
+                                                    default=datetime.now())
 
     class Meta:
         verbose_name = "Пользователь бота"
@@ -70,14 +72,12 @@ class DepositsManage(TimeBasedModel):
 
 
 class Deposits(DepositsManage):
-
     class Meta:
         verbose_name = "Пополнение"
         verbose_name_plural = "Пополнения"
 
 
 class Withdrawals(DepositsManage):
-
     class Meta:
         verbose_name = "Вывод"
         verbose_name_plural = "Выводы"
@@ -92,8 +92,3 @@ class ReferralAccruals(TimeBasedModel):
     class Meta:
         verbose_name = "Реферальное начисление"
         verbose_name_plural = "Реферальные начисления"
-
-
-
-
-

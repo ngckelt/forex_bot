@@ -25,3 +25,8 @@ async def notify_admin_about_withdrawal(client_telegram_id, amount, card_number)
         raise ValueError("Cannot send data to admin")
 
 
+async def notify_admin_about_two_percent_deposit_update(referrer_telegram_id, referral_username):
+    ...
+
+
+

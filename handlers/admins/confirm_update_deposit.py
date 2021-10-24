@@ -1,12 +1,16 @@
+from datetime import datetime
+
 from aiogram.dispatcher import FSMContext
 from aiogram import types
 from loader import dp
 
-from utils.db_api.db import ClientsModel, DepositsModel
-from utils.notifications import notify_client_about_success_deposit_update, notify_client_about_failed_deposit_update
+from utils.db_api.db import ClientsModel, DepositsModel, ReferralAccrualsModel
+from utils.notifications import notify_client_about_success_deposit_update, notify_client_about_failed_deposit_update, \
+    notify_referrer_about_two_percent_deposit_update
 from filters.admin_filters import AdminOnly
 from keyboards.inline.admin import confirm_update_deposit_callback
 from states.admins import NotifyClients
+from .utils import count_deposit, count_referrer_two_percent_deposit_update
 
 
 @dp.callback_query_handler(AdminOnly(), confirm_update_deposit_callback.filter())
@@ -31,14 +35,29 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
         except:
             await callback.message.answer("При добавлении данных возникла непредвиденная ошибка")
             return
-
-        await ClientsModel.update_client(client_telegram_id, deposit=client.deposit + int(amount))
+        deposit = count_deposit(client.deposit, int(amount), client.last_update_deposit_date)
+        await ClientsModel.update_client(client_telegram_id, deposit=deposit)
         try:
             await notify_client_about_success_deposit_update(client_telegram_id, amount)
             await callback.message.answer("Сообщение успешно отправлено пользователю")
         except ValueError:
             await callback.message.answer(f"Не удалось отправить сообщение пользователю {client_telegram_id}. "
                                           f"Возможно, он удалил чат с ботом")
+
+        if client.referer:
+            bonus = count_referrer_two_percent_deposit_update(int(amount))
+            print(bonus)
+            referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
+            await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + bonus)
+            await notify_referrer_about_two_percent_deposit_update(referrer.telegram_id, client.telegram_id, bonus)
+
+            await ReferralAccrualsModel.add_referral_accrual(
+                amount=bonus,
+                accrual_to=referrer.telegram_id,
+                accrual_from=client.telegram_id,
+                datetime=datetime.now()
+            )
+
     else:
         await state.update_data(client_telegram_id=client_telegram_id, amount=amount)
         await NotifyClients.get_failed_deposit_update_reason.set()
