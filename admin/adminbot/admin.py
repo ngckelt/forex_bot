@@ -4,7 +4,7 @@ from . import models
 
 @admin.register(models.Clients)
 class ClientsAdmin(admin.ModelAdmin):
-    list_display = ['telegram_id', 'deposit', 'username', 'referer', 'first_name', 'last_name']
+    list_display = ['telegram_id', 'username', 'first_name', 'last_name', 'deposit', 'card_number', 'referer']
     search_fields = ['telegram_id']
 
     class Meta:
@@ -40,7 +40,7 @@ class DepositsAdmin(admin.ModelAdmin):
 @admin.register(models.Withdrawals)
 class DepositsAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'datetime', 'telegram_id', 'amount', 'card_number']
-    search_fields = ['first_name', 'last_name', 'username', 'telegram_id']
+    search_fields = ['first_name', 'last_name', 'username', 'telegram_id', 'datetime']
 
     class Meta:
         model = models.Withdrawals

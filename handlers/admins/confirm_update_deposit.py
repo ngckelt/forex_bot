@@ -2,7 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram import types
 from loader import dp
 
-from utils.db_api.db import ClientsModel
+from utils.db_api.db import ClientsModel, DepositsModel
 from utils.notifications import notify_client_about_success_deposit_update, notify_client_about_failed_deposit_update
 from filters.admin_filters import AdminOnly
 from keyboards.inline.admin import confirm_update_deposit_callback
@@ -18,10 +18,24 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
     client = await ClientsModel.get_client_by_telegram_id(client_telegram_id)
 
     if choice == 'confirm':
-        ClientsModel.update_client(client_telegram_id, deposit=client.deposit + int(amount))
+        try:
+            await DepositsModel.add_deposit(
+                telegram_id=client.telegram_id,
+                username=client.username,
+                first_name=client.first_name,
+                last_name=client.last_name,
+                middle_name=client.middle_name,
+                amount=amount,
+                card_number=client.card_number
+            )
+        except:
+            await callback.message.answer("При добавлении данных возникла непредвиденная ошибка")
+            return
+
+        await ClientsModel.update_client(client_telegram_id, deposit=client.deposit + int(amount))
         try:
             await notify_client_about_success_deposit_update(client_telegram_id, amount)
-            await callback.message.answer("Сообщение успещно отправлено пользователю")
+            await callback.message.answer("Сообщение успешно отправлено пользователю")
         except ValueError:
             await callback.message.answer(f"Не удалось отправить сообщение пользователю {client_telegram_id}. "
                                           f"Возможно, он удалил чат с ботом")

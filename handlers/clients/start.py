@@ -6,7 +6,7 @@ from datetime import datetime
 from keyboards.default.clients import main_markup
 from utils.db_api.db import ClientsModel, ReferralsModel
 from states.clients import RegisterClient
-from .utils import correct_full_name, correct_card_number
+from .utils import correct_full_name, correct_card_number, split_card_number
 
 
 @dp.message_handler(CommandStart())
@@ -44,7 +44,7 @@ async def get_full_name(message: types.Message, state: FSMContext):
             middle_name=middle_name
         )
 
-        await message.answer("Прищлите номер Вашей карты. При выводе денег Вы сможете указать другую")
+        await message.answer("Пришлите номер Вашей карты. При выводе денег Вы сможете указать другую")
         await RegisterClient.get_card_number.set()
     else:
         await message.answer("Фамилия, имя и отчество указаны в неверном формате")
@@ -56,18 +56,21 @@ async def get_card_number(message: types.Message, state: FSMContext):
     if correct_card_number(card_number):
         state_data = await state.get_data()
         referrer = state_data.get('referrer')
+        card_number = split_card_number(card_number)
         try:
             await ClientsModel.add_client(
                 message.from_user.id,
                 username=message.from_user.username,
-                referer=referrer.telegram_id,
+                referer=referrer,
                 first_name=state_data.get('first_name').capitalize(),
                 last_name=state_data.get('last_name').capitalize(),
                 middle_name=state_data.get('middle_name').capitalize(),
-                card_number=card_number.replace(' ', ''),
+                card_number=card_number,
                 last_update_deposit_date=datetime.now(),
             )
         except Exception as e:
+            print(e)
+            print(e.__dict__)
             await message.answer("При добавлении записи возникла ошибка. Повторите попытку позже")
             return
         await message.answer(

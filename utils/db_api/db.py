@@ -75,3 +75,25 @@ class ReferralsModel:
             )
 
 
+class DepositsModel:
+
+    @staticmethod
+    @sync_to_async
+    def add_deposit(**data):
+        Deposits.objects.create(**data)
+
+
+class WithdrawalsModel:
+
+    @staticmethod
+    @sync_to_async
+    def add_withdrawal(**data):
+        Withdrawals.objects.create(**data)
+
+
+class ReferralAccrualsModel:
+
+    @staticmethod
+    @sync_to_async
+    def add_referral_accrual(**data):
+        ReferralAccruals.objects.create(**data)

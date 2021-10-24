@@ -27,7 +27,7 @@ class Clients(Users):
     first_name = models.CharField(verbose_name="Имя", max_length=255)
     last_name = models.CharField(verbose_name="Фамилия", max_length=255)
     middle_name = models.CharField(verbose_name="Отчество", max_length=255)
-    card_number = models.CharField(verbose_name="Номер карты", max_length=16)
+    card_number = models.CharField(verbose_name="Номер карты", max_length=20)
     deposit = models.FloatField(verbose_name="Баланс", default=0, validators=[MinValueValidator(0.0)])
     last_update_deposit_date = models.DateField(verbose_name="Последняя дата пополнения депозита", default=now)
 
@@ -58,9 +58,9 @@ class DepositsManage(TimeBasedModel):
     first_name = models.CharField(verbose_name="Имя", max_length=255)
     last_name = models.CharField(verbose_name="Фамилия", max_length=255)
     middle_name = models.CharField(verbose_name="Отчество", max_length=255)
-    datetime = models.DateTimeField(verbose_name="Дата и время")
+    datetime = models.DateTimeField(verbose_name="Дата и время", default=now)
     amount = models.FloatField(verbose_name="Сумма", validators=[MinValueValidator(0.0)])
-    card_number = models.CharField(verbose_name="Номер карты", max_length=16)
+    card_number = models.CharField(verbose_name="Номер карты", max_length=20)
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
@@ -92,4 +92,8 @@ class ReferralAccruals(TimeBasedModel):
     class Meta:
         verbose_name = "Реферальное начисление"
         verbose_name_plural = "Реферальные начисления"
+
+
+
+
 

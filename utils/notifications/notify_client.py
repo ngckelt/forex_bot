@@ -1,8 +1,11 @@
 from .utils import send_message
+from utils.db_api.db import ClientsModel
 
 
 async def notify_client_about_success_deposit_update(client_telegram_id, amount):
-    text = f"Ваш запрос на пополнение {amount} руб. принят"
+    client = await ClientsModel.get_client_by_telegram_id(client_telegram_id)
+    text = f"Ваш запрос на пополнение {amount} руб. принят. Ваш депозит на данный момент составляет " \
+           f"{client.deposit} руб."
     await send_message(client_telegram_id, text)
 
 
@@ -12,7 +15,8 @@ async def notify_client_about_failed_deposit_update(client_telegram_id, amount, 
 
 
 async def notify_client_about_success_withdrawal(client_telegram_id, amount):
-    text = f"Ваш запрос на вывод {amount} руб. принят"
+    client = await ClientsModel.get_client_by_telegram_id(client_telegram_id)
+    text = f"Ваш запрос на вывод {amount} руб. принят. Ваш депозит на данный момент составляет {client.deposit} руб."
     await send_message(client_telegram_id, text)
 
 
