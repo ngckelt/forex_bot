@@ -7,5 +7,5 @@ from utils.db_api.db import ClientsModel
 @dp.message_handler(text="Депозит")
 async def show_deposit(message: types.Message):
     client = await ClientsModel.get_client_by_telegram_id(message.from_user.id)
-    await message.answer(f"Ваш депозит на данный момент: {client.deposit}р.")
+    await message.answer(f"Ваш депозит на данный момент: {client.deposit} руб.")
 

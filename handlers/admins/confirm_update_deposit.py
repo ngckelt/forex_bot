@@ -45,7 +45,7 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
         await callback.message.answer("Укажите причину отказа")
 
 
-@dp.message_handler(state=NotifyClients.get_failed_deposit_update_reason)
+@dp.message_handler(AdminOnly(), state=NotifyClients.get_failed_deposit_update_reason)
 async def get_failed_deposit_update_reason(message: types.Message, state: FSMContext):
     reason = message.text
     state_data = await state.get_data()

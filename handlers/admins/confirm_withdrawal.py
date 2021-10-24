@@ -2,7 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram import types
 from loader import dp
 
-from utils.db_api.db import ClientsModel
+from utils.db_api.db import ClientsModel, WithdrawalsModel
 from utils.notifications import notify_client_about_success_withdrawal, notify_client_about_failed_withdrawal
 from filters.admin_filters import AdminOnly
 from keyboards.inline.admin import confirm_withdrawal_callback
@@ -18,7 +18,21 @@ async def confirm_withdrawal(callback: types.CallbackQuery, callback_data: dict,
     client = await ClientsModel.get_client_by_telegram_id(client_telegram_id)
 
     if choice == 'confirm':
-        ClientsModel.update_client(client_telegram_id, deposit=client.deposit - int(amount))
+        try:
+            await WithdrawalsModel.add_withdrawal(
+                telegram_id=client.telegram_id,
+                username=client.username,
+                first_name=client.first_name,
+                last_name=client.last_name,
+                middle_name=client.middle_name,
+                amount=amount,
+                card_number=client.card_number
+            )
+        except Exception as e:
+            print(e)
+            await callback.message.answer("Возникла непредвиденная ошибка")
+            return
+        await ClientsModel.update_client(client_telegram_id, deposit=client.deposit - int(amount))
         try:
             await notify_client_about_success_withdrawal(client_telegram_id, amount)
             await callback.message.answer("Сообщение успещно отправлено пользователю")
@@ -31,7 +45,7 @@ async def confirm_withdrawal(callback: types.CallbackQuery, callback_data: dict,
         await callback.message.answer("Укажите причину отказа")
 
 
-@dp.message_handler(state=NotifyClients.get_failed_withdrawal_reason)
+@dp.message_handler(AdminOnly(), state=NotifyClients.get_failed_withdrawal_reason)
 async def get_failed_withdrawal_reason(message: types.Message, state: FSMContext):
     reason = message.text
     state_data = await state.get_data()
