@@ -18,6 +18,9 @@ async def start(message: types.Message, state: FSMContext):
         if referer_telegram_id:
             try:
                 referer_telegram_id = int(referer_telegram_id)
+                if referer_telegram_id == message.from_user.id:
+                    await message.answer("Вы не можете быть рефералом для самого себя")
+                    return
                 referrer = await ClientsModel.get_client_by_telegram_id(referer_telegram_id)
             except ValueError:
                 await message.answer("Неверная ссылка")
