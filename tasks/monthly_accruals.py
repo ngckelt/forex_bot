@@ -1,4 +1,4 @@
-from utils.db_api.db import ClientsModel
+from utils.db_api.db import ClientsModel, ReferralAccrualsModel
 from handlers.admins.utils import get_delta_days
 from datetime import datetime, timezone
 from utils.notifications import notify_client_about_ten_percent_deposit_update, \
@@ -29,6 +29,12 @@ async def accrual_ten_percent():
                                                                        referrer_bonus)
                 await notify_admin_about_one_percent_deposit_update(referrer.telegram_id, client.telegram_id, bonus,
                                                                     referrer_bonus)
+                await ReferralAccrualsModel.add_referral_accrual(
+                    amount=referrer_bonus,
+                    accrual_to=referrer.telegram_id,
+                    accrual_from=client.telegram_id,
+                    datetime=now,
+                )
 
 
 
