@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 TEN_PERCENT = 10 / 100
 TWO_PERCENT = 2 / 100
+ONE_PERCENT = 1 / 100
 
 
 def get_current_month_number():
