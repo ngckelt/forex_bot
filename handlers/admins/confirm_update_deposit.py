@@ -6,7 +6,7 @@ from loader import dp
 
 from utils.db_api.db import ClientsModel, DepositsModel, ReferralAccrualsModel
 from utils.notifications import notify_client_about_success_deposit_update, notify_client_about_failed_deposit_update, \
-    notify_referrer_about_two_percent_deposit_update
+    notify_referrer_about_two_percent_deposit_update, notify_admin_about_two_percent_deposit_update
 from filters.admin_filters import AdminOnly
 from keyboards.inline.admin import confirm_update_deposit_callback
 from states.admins import NotifyClients
@@ -50,7 +50,7 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
             referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
             await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + bonus)
             await notify_referrer_about_two_percent_deposit_update(referrer.telegram_id, client.telegram_id, bonus)
-
+            await notify_admin_about_two_percent_deposit_update(referrer.telegram_id, client.telegram_id, amount, bonus)
             await ReferralAccrualsModel.add_referral_accrual(
                 amount=bonus,
                 accrual_to=referrer.telegram_id,

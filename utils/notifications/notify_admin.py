@@ -25,8 +25,14 @@ async def notify_admin_about_withdrawal(client_telegram_id, amount, card_number)
         raise ValueError("Cannot send data to admin")
 
 
-async def notify_admin_about_two_percent_deposit_update(referrer_telegram_id, referral_username):
-    ...
-
+async def notify_admin_about_two_percent_deposit_update(referrer_telegram_id, referral_telegram_id, amount, bonus):
+    admin = await BotAdminsModel.get_active_bot_admin()
+    message = f"Пользователю {referrer_telegram_id} был начислен бонус 2% ({bonus} руб.) от суммы {amount} " \
+              f"за пользователя {referral_telegram_id}"
+    try:
+        await send_message(admin.telegram_id, message)
+    except Exception as e:
+        print(e)
+        raise ValueError("Cannot send data to admin")
 
 

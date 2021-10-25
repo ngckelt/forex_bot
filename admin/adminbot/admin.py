@@ -5,7 +5,7 @@ from . import models
 @admin.register(models.Clients)
 class ClientsAdmin(admin.ModelAdmin):
     list_display = ['telegram_id', 'username', 'first_name', 'last_name', 'deposit', 'card_number', 'referer']
-    search_fields = ['telegram_id']
+    search_fields = ['telegram_id', 'username', 'referer']
 
     class Meta:
         model = models.Clients
