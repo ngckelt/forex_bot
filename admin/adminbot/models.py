@@ -92,3 +92,18 @@ class ReferralAccruals(TimeBasedModel):
     class Meta:
         verbose_name = "Реферальное начисление"
         verbose_name_plural = "Реферальные начисления"
+
+
+class MonthlyAccruals(TimeBasedModel):
+    client = models.CharField(verbose_name="ID клиента в телеграмме", max_length=255)
+    amount = models.FloatField(verbose_name="Сумма", validators=[MinValueValidator(0.0)])
+    datetime = models.DateTimeField(verbose_name="Дата и время")
+
+    def __str__(self):
+        return self.client
+
+    class Meta:
+        verbose_name = "Месячное начисление"
+        verbose_name_plural = "Месячные начисления"
+
+

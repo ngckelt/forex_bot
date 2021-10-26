@@ -54,3 +54,11 @@ class ReferralAccrualsAdmin(admin.ModelAdmin):
     class Meta:
         model = models.ReferralAccruals
 
+
+@admin.register(models.MonthlyAccruals)
+class MonthlyAccrualsAdmin(admin.ModelAdmin):
+    list_display = ['client', 'amount', 'datetime']
+    search_fields = ['client']
+
+    class Meta:
+        model = models.MonthlyAccruals
