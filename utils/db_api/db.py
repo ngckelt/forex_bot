@@ -82,6 +82,11 @@ class DepositsModel:
     def add_deposit(**data):
         Deposits.objects.create(**data)
 
+    @staticmethod
+    @sync_to_async
+    def get_client_deposits(client_telegram_id):
+        return Deposits.objects.filter(telegram_id=client_telegram_id)
+
 
 class WithdrawalsModel:
 
@@ -89,6 +94,16 @@ class WithdrawalsModel:
     @sync_to_async
     def add_withdrawal(**data):
         Withdrawals.objects.create(**data)
+
+    @staticmethod
+    @sync_to_async
+    def get_client_withdrawals(client_telegram_id):
+        return Withdrawals.objects.filter(telegram_id=client_telegram_id)
+
+    @staticmethod
+    @sync_to_async
+    def get_last_client_withdrawal(client_telegram_id):
+        return Withdrawals.objects.filter(telegram_id=client_telegram_id).order_by('-datetime').first()
 
 
 class ReferralAccrualsModel:

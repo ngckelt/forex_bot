@@ -46,7 +46,6 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
 
         if client.referer:
             bonus = count_referrer_two_percent_deposit_update(int(amount))
-            print(bonus)
             referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
             await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + bonus)
             await notify_referrer_about_two_percent_deposit_update(referrer.telegram_id, client.telegram_id, bonus)
