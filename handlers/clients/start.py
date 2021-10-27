@@ -47,7 +47,8 @@ async def get_full_name(message: types.Message, state: FSMContext):
             middle_name=middle_name
         )
 
-        await message.answer("Пришлите номер Вашей карты. При выводе денег Вы сможете указать другую")
+        await message.answer("Пришлите номер Вашей карты. При следующем пополнении или выводе денег Вы сможете указать "
+                             "другую. При отправке номера карты для удобства можно использовать пробелы")
         await RegisterClient.get_card_number.set()
     else:
         await message.answer("Фамилия, имя и отчество указаны в неверном формате")

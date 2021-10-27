@@ -11,8 +11,11 @@ from keyboards.inline import yes_or_no_markup, yes_or_no_callback
 
 @dp.message_handler(text="Вывод средств")
 async def funds_off(message: types.Message, state: FSMContext):
-    await message.answer("Информационный блок с % комиссии")
     client = await ClientsModel.get_client_by_telegram_id(message.from_user.id)
+    if client.deposit == 0:
+        await message.answer("Ваш депозит составляет 0.0 руб. Вы не можете осуществить вывод средств")
+        return
+    await message.answer("Информационный блок с % комиссии")
     await message.answer(f"Ваш депозит на данный момент составляет {client.deposit} руб.")
     await state.update_data(card_number=client.card_number)
     await message.answer(

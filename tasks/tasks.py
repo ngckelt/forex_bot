@@ -6,12 +6,13 @@ BASE_SLEEP_SECONDS = 1
 
 
 async def setup():
-    aioschedule.every().minute.do(accrual_months_percents)
+    ...
+    # aioschedule.every().minute.do(accrual_months_percents)
     # aioschedule.every().day.at("21:45").do(accrual_ten_percent)
 
-    while True:
-        await aioschedule.run_pending()
-        await sleep(BASE_SLEEP_SECONDS)
+    # while True:
+    #     await aioschedule.run_pending()
+    #     await sleep(BASE_SLEEP_SECONDS)
 
 """
 Решили что вычисляем количетсво дней до 1 числа, делим на число дней в месяце, вычисляем % начисления. 
