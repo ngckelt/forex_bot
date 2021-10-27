@@ -24,15 +24,15 @@ async def notify_admin_about_two_percent_deposit_update(referrer_telegram_id, re
     await send_message(admin.telegram_id, text)
 
 
-async def notify_admin_about_ten_percent_deposit_update(client_telegram_id, bonus):
+async def notify_admin_about_month_deposit_update(client_telegram_id, bonus):
     admin = await BotAdminsModel.get_active_bot_admin()
-    text = f"Пользвателю {client_telegram_id} был начислен месячный бонус в размере {bonus}"
+    text = f"Пользвателю {client_telegram_id} был начислен месячный бонус в размере {bonus} руб."
     await send_message(admin.telegram_id, text)
 
 
-async def notify_admin_about_one_percent_deposit_update(referrer_telegram_id, referral_telegram_id, amount, bonus):
+async def notify_admin_about_one_percent_deposit_update(referrer_telegram_id, referral_telegram_id, bonus):
     admin = await BotAdminsModel.get_active_bot_admin()
-    text = f"Пользователю {referrer_telegram_id} был начислен бонус 1% ({bonus} руб.) от суммы {amount} " \
+    text = f"Пользователю {referrer_telegram_id} был начислен бонус ({bonus} руб.) " \
            f"за пользователя {referral_telegram_id} (месячное пополнение)"
     await send_message(admin.telegram_id, text)
 

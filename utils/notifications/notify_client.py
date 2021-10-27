@@ -25,7 +25,7 @@ async def notify_client_about_failed_withdrawal(client_telegram_id, amount, reas
     await send_message(client_telegram_id, text)
 
 
-async def notify_client_about_ten_percent_deposit_update(client_telegram_id, bonus, new_deposit):
+async def notify_client_about_month_deposit_update(client_telegram_id, bonus, new_deposit):
     text = f"Вам был начислен месячный бонус в размере {bonus} руб. Ваш текущий депозит составляет {new_deposit} руб."
     await send_message(client_telegram_id, text)
 
