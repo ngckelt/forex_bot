@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from aiogram.dispatcher import FSMContext
 from aiogram import types
@@ -48,13 +48,13 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
             bonus = count_referrer_two_percent_deposit_update(int(amount))
             referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
             await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + bonus)
-            await notify_referrer_about_two_percent_deposit_update(referrer.telegram_id, client.telegram_id, bonus)
-            await notify_admin_about_two_percent_deposit_update(referrer.telegram_id, client.telegram_id, amount, bonus)
+            await notify_referrer_about_two_percent_deposit_update(referrer.telegram_id, client, bonus)
+            await notify_admin_about_two_percent_deposit_update(referrer, client, amount, bonus)
             await ReferralAccrualsModel.add_referral_accrual(
                 amount=bonus,
                 accrual_to=referrer.telegram_id,
                 accrual_from=client.telegram_id,
-                datetime=datetime.now()
+                datetime=datetime.now(timezone.utc)
             )
 
     else:

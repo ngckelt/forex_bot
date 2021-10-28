@@ -44,14 +44,14 @@ async def accrual_months_percents():
                 bonus += round(float(deposit_update.amount) * percent, 2)
 
             await ClientsModel.update_client(client.telegram_id, deposit=client.deposit + bonus)
-            await notify_admin_about_month_deposit_update(client.telegram_id, bonus)
+            await notify_admin_about_month_deposit_update(client, bonus)
             await notify_client_about_month_deposit_update(client.telegram_id, bonus, client.deposit + bonus)
             if client.referer:
                 referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
                 referer_bonus = round(client.deposit * ONE_PERCENT, 2)
                 await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + referer_bonus)
-                await notify_referrer_about_month_deposit_update(referrer.telegram_id, client.username, referer_bonus)
-                await notify_admin_about_one_percent_deposit_update(referrer.telegram_id, client.telegram_id,
+                await notify_referrer_about_month_deposit_update(referrer.telegram_id, client, referer_bonus)
+                await notify_admin_about_one_percent_deposit_update(referrer, client.telegram_id,
                                                                     referer_bonus)
 
 # async def accrual_ten_percent():

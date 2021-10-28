@@ -4,6 +4,7 @@ from loader import dp
 
 from keyboards.inline.clients import confirm_markup, confirm_callback, back_to_confirm_markup, back_to_confirm_callback
 from keyboards.inline import yes_or_no_markup, yes_or_no_callback
+from keyboards.default.clients import cancel_markup, main_markup
 from states.clients import UpdateDeposit
 from .utils import correct_update_amount, correct_card_number, split_card_number
 from utils.notifications import notify_admin_about_update_deposit
@@ -24,13 +25,15 @@ async def confirm_callback(callback: types.CallbackQuery, callback_data: dict, s
     choice = callback_data.get('choice')
 
     if choice == "True":
-        client = await ClientsModel.get_client_by_telegram_id(callback.from_user.id)
-        await state.update_data(card_number=client.card_number)
-        await callback.message.answer(
-            text=f"Использовать эту карту: {client.card_number}?",
-            reply_markup=yes_or_no_markup('use_existing_card')
-        )
-        await UpdateDeposit.use_existing_card.set()
+        # client = await ClientsModel.get_client_by_telegram_id(callback.from_user.id)
+        # await state.update_data(card_number=client.card_number)
+        # await callback.message.answer(
+        #     text=f"Использовать эту карту: {client.card_number}?",
+        #     reply_markup=yes_or_no_markup('use_existing_card')
+        # )
+        # await UpdateDeposit.use_existing_card.set()
+        await UpdateDeposit.get_amount.set()
+        await callback.message.answer("Пришлите сумму", reply_markup=cancel_markup)
     else:
         await callback.message.edit_text(
             text="Информационный блок, что счет нельзя пополнить не подписав согласие",
@@ -79,11 +82,12 @@ async def get_amount(message: types.Message, state: FSMContext):
         state_data = await state.get_data()
         card_number = state_data.get('card_number')
         try:
-            await notify_admin_about_update_deposit(message.from_user.id, amount, card_number)
-            await message.answer("Заявка отправлена администратору. Ожидайте ответ")
+            client = await ClientsModel.get_client_by_telegram_id(message.from_user.id)
+            await notify_admin_about_update_deposit(client, amount, client.card_number)
+            await message.answer("Заявка отправлена администратору. Ожидайте ответ", reply_markup=main_markup)
         except ValueError:
             await message.answer("При отправке данных администратору возникла непредвиденная ошибка. "
-                                 "Повторите попытку позже")
+                                 "Повторите попытку позже", reply_markup=main_markup)
         await state.finish()
     else:
         await message.answer("Сумма указана неверно")

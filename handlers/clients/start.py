@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.dispatcher import FSMContext
 from loader import dp
-from datetime import datetime
+from datetime import datetime, timezone
 from keyboards.default.clients import main_markup
 from utils.db_api.db import ClientsModel
 from states.clients import RegisterClient
@@ -70,7 +70,7 @@ async def get_card_number(message: types.Message, state: FSMContext):
                 last_name=state_data.get('last_name').capitalize(),
                 middle_name=state_data.get('middle_name').capitalize(),
                 card_number=card_number,
-                last_update_deposit_date=datetime.now(),
+                last_update_deposit_date=datetime.now(timezone.utc),
             )
         except Exception as e:
             print(e)
@@ -82,13 +82,6 @@ async def get_card_number(message: types.Message, state: FSMContext):
             reply_markup=main_markup
         )
         await state.finish()
-
-        if referrer:
-            await ReferralsModel.add_referral(
-                referrer=referrer,
-                referral_telegram_id=message.from_user.id,
-                referral_username=message.from_user.username
-            )
 
     else:
         await message.answer("Неверный формат номера карты")
