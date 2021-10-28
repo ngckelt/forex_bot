@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp
 from datetime import datetime
 from keyboards.default.clients import main_markup
-from utils.db_api.db import ClientsModel, ReferralsModel
+from utils.db_api.db import ClientsModel
 from states.clients import RegisterClient
 from .utils import correct_full_name, correct_card_number, split_card_number
 
@@ -47,7 +47,7 @@ async def get_full_name(message: types.Message, state: FSMContext):
             middle_name=middle_name
         )
 
-        await message.answer("Пришлите номер Вашей карты. При следующем пополнении или выводе денег Вы сможете указать "
+        await message.answer("Пришлите номер Вашей карты. При выводе денег Вы сможете указать "
                              "другую. При отправке номера карты для удобства можно использовать пробелы")
         await RegisterClient.get_card_number.set()
     else:

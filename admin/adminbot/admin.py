@@ -20,14 +20,6 @@ class BotAdminsAdmin(admin.ModelAdmin):
         model = models.BotAdmins
 
 
-@admin.register(models.Referrals)
-class ReferralsAdmin(admin.ModelAdmin):
-    list_display = ['referrer']
-
-    class Meta:
-        model = models.Referrals
-
-
 @admin.register(models.Deposits)
 class DepositsAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'datetime', 'telegram_id', 'amount', 'card_number']

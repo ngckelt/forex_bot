@@ -38,14 +38,6 @@ class Clients(Users):
         verbose_name_plural = "Пользователи бота"
 
 
-class Referrals(Users):
-    referrer = models.ForeignKey(Clients, verbose_name="Реферер", on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "Реферал"
-        verbose_name_plural = "Рефералы"
-
-
 class BotAdmins(Users):
     active = models.BooleanField(verbose_name="Активен", default=True)
 

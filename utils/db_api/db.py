@@ -1,5 +1,6 @@
 from asgiref.sync import sync_to_async
 from admin.adminbot.models import *
+from data.config import DEFAULT_USERNAME
 
 
 class ClientsModel:
@@ -7,16 +8,12 @@ class ClientsModel:
     @staticmethod
     @sync_to_async
     def add_client(telegram_id, username, referer, **data):
-        if username:
-            if referer:
-                Clients.objects.create(telegram_id=telegram_id, username=username, referer=referer, **data)
-            else:
-                Clients.objects.create(telegram_id=telegram_id, username=username, **data)
+        if not username:
+            username = DEFAULT_USERNAME
+        if referer:
+            Clients.objects.create(telegram_id=telegram_id, username=username, referer=referer, **data)
         else:
-            if referer:
-                Clients.objects.create(telegram_id=telegram_id, referer=referer, **data)
-            else:
-                Clients.objects.create(telegram_id=telegram_id, **data)
+            Clients.objects.create(telegram_id=telegram_id, username=username, **data)
 
     @staticmethod
     @sync_to_async
@@ -32,11 +29,6 @@ class ClientsModel:
     @sync_to_async
     def get_clients():
         return Clients.objects.all()
-
-    @staticmethod
-    @sync_to_async
-    def get_referrals(client):
-        return Referrals.objects.filter(referrer=client)
 
 
 class BotAdminsModel:
@@ -55,24 +47,6 @@ class BotAdminsModel:
     @sync_to_async
     def get_active_bot_admin():
         return BotAdmins.objects.filter(active=True).first()
-
-
-class ReferralsModel:
-
-    @staticmethod
-    @sync_to_async
-    def add_referral(referrer, referral_telegram_id, referral_username):
-        if referral_username:
-            Referrals.objects.create(
-                referrer=referrer,
-                telegram_id=referral_telegram_id,
-                username=referral_username
-            )
-        else:
-            Referrals.objects.create(
-                referrer=referrer,
-                telegram_id=referral_telegram_id,
-            )
 
 
 class DepositsModel:
