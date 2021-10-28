@@ -99,3 +99,32 @@ class MonthlyAccruals(TimeBasedModel):
         verbose_name_plural = "Месячные начисления"
 
 
+class CardDetails(TimeBasedModel):
+    card_name = models.CharField(verbose_name="Название карты", max_length=255)
+    card_number = models.CharField(verbose_name="Номер карты", max_length=255)
+
+    def __str__(self):
+        return self.card_name
+
+    class Meta:
+        verbose_name = "Реквизит карты"
+        verbose_name_plural = "Реквизиты карт"
+
+
+class BotTexts(TimeBasedModel):
+    name = models.CharField(verbose_name="Название", max_length=255)
+    text = models.TextField(verbose_name="Текст")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Текст бота"
+        verbose_name_plural = "Тексты бота"
+
+
+
+
+
+
+

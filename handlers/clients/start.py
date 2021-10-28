@@ -4,9 +4,10 @@ from aiogram.dispatcher import FSMContext
 from loader import dp
 from datetime import datetime, timezone
 from keyboards.default.clients import main_markup
-from utils.db_api.db import ClientsModel
+from utils.db_api.db import ClientsModel, BotTextsModel
 from states.clients import RegisterClient
 from .utils import correct_full_name, correct_card_number, split_card_number
+from data.config import BotTexts
 
 
 @dp.message_handler(CommandStart())
@@ -27,7 +28,7 @@ async def start(message: types.Message, state: FSMContext):
                 return
         await state.update_data(referrer=referrer)
         await message.answer(
-            text="Тут будет общая информация о владельце бота и услугах которые предоставляет.",
+            text=await BotTextsModel.get_bot_text_by_item(BotTexts.bot_owner),
         )
 
         await message.answer("Напишите свою фамлмю, свое имя и свое отчество через пробел")

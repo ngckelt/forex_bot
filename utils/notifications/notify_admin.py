@@ -3,10 +3,9 @@ from keyboards.inline.admin import confirm_update_deposit_markup, confirm_withdr
 from .utils import send_message_to_admin, get_user_contact
 
 
-async def notify_admin_about_update_deposit(client, amount, card_number):
+async def notify_admin_about_update_deposit(client, amount):
     admin = await BotAdminsModel.get_active_bot_admin()
-    text = f"Пользователь {get_user_contact(client)} хочет пополнить свой депозит на сумму {amount} руб.\nНомер карты: " \
-           f"{card_number}"
+    text = f"Пользователь {get_user_contact(client)} хочет пополнить свой депозит на сумму {amount} руб.\n"
     await send_message_to_admin(admin, text, confirm_update_deposit_markup(client.telegram_id, amount))
 
 

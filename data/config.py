@@ -1,13 +1,21 @@
+from dataclasses import dataclass
 from environs import Env
 
-# Теперь используем вместо библиотеки python-dotenv библиотеку environs
 env = Env()
 env.read_env()
 
-BOT_TOKEN = env.str("BOT_TOKEN")  # Забираем значение типа str
-ADMINS = env.list("ADMINS")  # Тут у нас будет список из админов
-# IP = env.str("IP")  # Тоже str, но для айпи адреса хоста
+BOT_TOKEN = env.str("BOT_TOKEN")
+ADMINS = env.list("ADMINS")
+
 
 DEFAULT_USERNAME = "Отсутствует"
+
+
+@dataclass
+class BotTexts:
+    bot_owner = "Информация о владельце бота и услугах которые предоставляет"
+    terms_of_deposit_update = "Информационный блок об условиях пополнения, вывода, получения прибыли"
+    do_not_confirm_terms = "Информационный блок, что счет нельзя пополнить не подписав согласие"
+    commission_percentages = "Информационный блок с % комиссии"
 
 

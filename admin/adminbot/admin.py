@@ -54,3 +54,19 @@ class MonthlyAccrualsAdmin(admin.ModelAdmin):
 
     class Meta:
         model = models.MonthlyAccruals
+
+
+@admin.register(models.CardDetails)
+class CardDetailsAdmins(admin.ModelAdmin):
+    list_display = ['card_name', 'card_number']
+
+    class Meta:
+        model = models.CardDetails
+
+
+@admin.register(models.BotTexts)
+class BotTextsAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+    class Meta:
+        model = models.BotTexts

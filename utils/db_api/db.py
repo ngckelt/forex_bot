@@ -86,3 +86,27 @@ class ReferralAccrualsModel:
     @sync_to_async
     def add_referral_accrual(**data):
         ReferralAccruals.objects.create(**data)
+
+
+class CardDetailsModel:
+
+    @staticmethod
+    @sync_to_async
+    def get_card_details():
+        return CardDetails.objects.all()
+
+
+class BotTextsModel:
+
+    @staticmethod
+    @sync_to_async
+    def get_bot_text_by_item(item):
+        texts = BotTexts.objects.all()
+        for text in texts:
+            if text.name == item:
+                return text.text
+
+
+
+
+

@@ -2,12 +2,13 @@ from aiogram.dispatcher import FSMContext
 from aiogram import types
 from loader import dp
 
-from utils.db_api.db import ClientsModel
+from utils.db_api.db import ClientsModel, BotTextsModel
 from states.clients import Withdrawal
 from .utils import correct_amount, correct_card_number, split_card_number
 from utils.notifications import notify_admin_about_withdrawal
 from keyboards.inline import yes_or_no_markup, yes_or_no_callback
 from keyboards.default.clients import main_markup, cancel_markup
+from data.config import BotTexts
 
 
 @dp.message_handler(text="Вывод средств")
@@ -16,7 +17,7 @@ async def funds_off(message: types.Message, state: FSMContext):
     if client.deposit == 0:
         await message.answer("Ваш депозит составляет 0.0 руб. Вы не можете осуществить вывод средств")
         return
-    await message.answer("Информационный блок с % комиссии")
+    await message.answer(text=await BotTextsModel.get_bot_text_by_item(BotTexts.commission_percentages))
     await message.answer(f"Ваш депозит на данный момент составляет {client.deposit} руб.", reply_markup=cancel_markup)
     await state.update_data(card_number=client.card_number)
     await message.answer(
