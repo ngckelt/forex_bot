@@ -6,6 +6,7 @@ from handlers.admins.utils import get_delta_days, get_current_month_number, get_
 from datetime import datetime, timezone, timedelta
 from utils.notifications import notify_referrer_about_month_deposit_update, notify_admin_about_month_deposit_update, \
     notify_client_about_month_deposit_update, notify_admin_about_one_percent_deposit_update
+from data.config import DEFAULT_USERNAME
 
 MONTH_DEPOSIT_UPDATE_DELTA_DAYS = 30
 
@@ -53,6 +54,12 @@ async def accrual_months_percents():
                 await notify_referrer_about_month_deposit_update(referrer.telegram_id, client, referer_bonus)
                 await notify_admin_about_one_percent_deposit_update(referrer, client.telegram_id,
                                                                     referer_bonus)
+                await ReferralAccrualsModel.add_referral_accrual(
+                    amount=referer_bonus,
+                    accrual_to=referrer.username if referrer.username != DEFAULT_USERNAME else referrer.telegram_id,
+                    accrual_from=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,
+                    datetime=datetime.now(timezone.utc)
+                )
 
 # async def accrual_ten_percent():
 #     now = datetime.now(timezone.utc)

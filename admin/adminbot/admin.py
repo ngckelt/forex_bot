@@ -22,7 +22,7 @@ class BotAdminsAdmin(admin.ModelAdmin):
 
 @admin.register(models.Deposits)
 class DepositsAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'datetime', 'telegram_id', 'amount', 'card_number']
+    list_display = ['first_name', 'last_name', 'username', 'telegram_id', 'datetime', 'amount', 'card_number']
     search_fields = ['first_name', 'last_name', 'username', 'telegram_id']
 
     class Meta:
@@ -30,8 +30,8 @@ class DepositsAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Withdrawals)
-class DepositsAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'datetime', 'telegram_id', 'amount', 'card_number']
+class WithdrawalsAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'username', 'telegram_id', 'datetime', 'amount', 'card_number']
     search_fields = ['first_name', 'last_name', 'username', 'telegram_id', 'datetime']
 
     class Meta:

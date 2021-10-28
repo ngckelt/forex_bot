@@ -11,6 +11,7 @@ from filters.admin_filters import AdminOnly
 from keyboards.inline.admin import confirm_update_deposit_callback
 from states.admins import NotifyClients
 from .utils import count_deposit, count_referrer_two_percent_deposit_update
+from data.config import DEFAULT_USERNAME
 
 
 @dp.callback_query_handler(AdminOnly(), confirm_update_deposit_callback.filter())
@@ -52,8 +53,8 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
             await notify_admin_about_two_percent_deposit_update(referrer, client, amount, bonus)
             await ReferralAccrualsModel.add_referral_accrual(
                 amount=bonus,
-                accrual_to=referrer.telegram_id,
-                accrual_from=client.telegram_id,
+                accrual_to=referrer.username if referrer.username != DEFAULT_USERNAME else referrer.telegram_id,
+                accrual_from=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,
                 datetime=datetime.now(timezone.utc)
             )
 
