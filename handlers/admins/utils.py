@@ -26,7 +26,7 @@ def count_deposit(current_deposit, amount, last_deposit_update_date):
     delta_days = get_delta_days(now, last_deposit_update_date)
     days_quantity = get_month_days_quantity(get_current_month_number())
     bonus = round(current_deposit * TEN_PERCENT * delta_days / days_quantity, 2)
-    return current_deposit + amount + bonus
+    return round(current_deposit + amount + bonus, 2)
 
 
 def count_referrer_one_percent_deposit_update(amount):

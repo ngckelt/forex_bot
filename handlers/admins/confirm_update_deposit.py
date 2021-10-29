@@ -11,6 +11,7 @@ from filters.admin_filters import AdminOnly
 from keyboards.inline.admin import confirm_update_deposit_callback
 from states.admins import NotifyClients
 from .utils import count_deposit, count_referrer_one_percent_deposit_update
+from handlers.clients.utils import count_commission
 from data.config import DEFAULT_USERNAME
 
 
@@ -23,6 +24,8 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
     client = await ClientsModel.get_client_by_telegram_id(client_telegram_id)
 
     if choice == 'confirm':
+        amount = float(amount)
+        new_amount, percent = count_commission(amount)
         try:
             await DepositsModel.add_deposit(
                 telegram_id=client.telegram_id,
@@ -36,10 +39,11 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
         except:
             await callback.message.answer("При добавлении данных возникла непредвиденная ошибка")
             return
-        deposit = count_deposit(client.deposit, float(amount), client.last_update_deposit_date)
-        await ClientsModel.update_client(client_telegram_id, deposit=deposit)
+        deposit = count_deposit(client.deposit, float(new_amount), client.last_update_deposit_date)
+        await ClientsModel.update_client(client_telegram_id, deposit=deposit,
+                                         last_update_deposit_date=datetime.now(timezone.utc))
         try:
-            await notify_client_about_success_deposit_update(client_telegram_id, amount)
+            await notify_client_about_success_deposit_update(client_telegram_id, float(new_amount))
             await callback.message.answer("Сообщение успешно отправлено пользователю")
         except ValueError:
             await callback.message.answer(f"Не удалось отправить сообщение пользователю {client_telegram_id}. "
