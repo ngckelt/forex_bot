@@ -11,9 +11,9 @@ from states.admins import NotifyClients
 from tasks.monthly_accruals import accrual_months_percents
 
 
-@dp.message_handler(commands=['test'])
-async def test(message: types.Message):
-    await accrual_months_percents()
+# @dp.message_handler(commands=['test'])
+# async def test(message: types.Message):
+#     await accrual_months_percents()
 
 
 @dp.message_handler(AdminOnly(), commands=['mailing'])
