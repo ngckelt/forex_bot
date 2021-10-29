@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from utils.db_api.db import ClientsModel, ReferralAccrualsModel, DepositsModel, WithdrawalsModel
+from utils.db_api.db import ClientsModel, ReferralAccrualsModel, DepositsModel, WithdrawalsModel, MonthlyAccrualsModel
 from handlers.admins.utils import get_delta_days, get_current_month_number, get_month_days_quantity, TEN_PERCENT, \
     ONE_PERCENT, get_current_month_day
 from datetime import datetime, timezone, timedelta
@@ -31,8 +31,8 @@ async def get_previous_month_deposit_updates(client):
 
 
 async def accrual_months_percents():
-    # if get_current_month_day() != 1:
-    #     return
+    if get_current_month_day() != 1:
+        return
     previous_month_number = get_current_month_number() - 1
     previous_month_days_quantity = get_month_days_quantity(previous_month_number)
     clients = await ClientsModel.get_clients()
@@ -48,6 +48,13 @@ async def accrual_months_percents():
             await ClientsModel.update_client(client.telegram_id, deposit=client.deposit + bonus)
             await notify_admin_about_month_deposit_update(client, bonus)
             await notify_client_about_month_deposit_update(client.telegram_id, bonus, client.deposit + bonus)
+
+            await MonthlyAccrualsModel.add_monthly_accrual(
+                client_username=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,
+                amount=bonus,
+                datetime=datetime.now(timezone.utc)
+            )
+
             if client.referer:
                 referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
                 referer_bonus = round(client.deposit * ONE_PERCENT, 2)

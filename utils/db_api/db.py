@@ -107,6 +107,16 @@ class BotTextsModel:
                 return text.text
 
 
+class MonthlyAccrualsModel:
+
+    @staticmethod
+    @sync_to_async
+    def add_monthly_accrual(client_username, amount, datetime):
+        MonthlyAccruals.objects.create(
+            client=client_username,
+            amount=amount,
+            datetime=datetime
+        )
 
 
 
