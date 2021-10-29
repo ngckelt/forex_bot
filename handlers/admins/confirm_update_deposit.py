@@ -36,7 +36,7 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
         except:
             await callback.message.answer("При добавлении данных возникла непредвиденная ошибка")
             return
-        deposit = count_deposit(client.deposit, int(amount), client.last_update_deposit_date)
+        deposit = count_deposit(client.deposit, float(amount), client.last_update_deposit_date)
         await ClientsModel.update_client(client_telegram_id, deposit=deposit)
         try:
             await notify_client_about_success_deposit_update(client_telegram_id, amount)
@@ -46,7 +46,7 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
                                           f"Возможно, он удалил чат с ботом")
 
         if client.referer:
-            bonus = count_referrer_one_percent_deposit_update(int(amount))
+            bonus = count_referrer_one_percent_deposit_update(float(amount))
             referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
             await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + bonus)
             await notify_referrer_about_one_percent_deposit_update(referrer.telegram_id, client, bonus)

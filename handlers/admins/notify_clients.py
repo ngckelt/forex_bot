@@ -16,7 +16,7 @@ async def test(message: types.Message):
     await accrual_months_percents()
 
 
-@dp.message_handler(AdminOnly(), text="Сделать рассылку")
+@dp.message_handler(AdminOnly(), commands=['mailing'])
 async def start_notify(message: types.Message):
     await message.answer("Пришлите текст рассылки")
     await NotifyClients.get_text.set()

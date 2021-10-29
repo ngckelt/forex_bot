@@ -4,7 +4,7 @@ from loader import dp
 
 from utils.db_api.db import ClientsModel, BotTextsModel
 from states.clients import Withdrawal
-from .utils import correct_amount, correct_card_number, split_card_number
+from .utils import correct_amount, correct_card_number, split_card_number, count_commission
 from utils.notifications import notify_admin_about_withdrawal
 from keyboards.inline import yes_or_no_markup, yes_or_no_callback
 from keyboards.default.clients import main_markup, cancel_markup
@@ -59,13 +59,17 @@ async def get_withdrawal_amount(message: types.Message, state: FSMContext):
     client = await ClientsModel.get_client_by_telegram_id(message.from_user.id)
 
     try:
-        amount = int(amount)
+        amount = float(amount)
         if amount > client.deposit:
             await message.answer(f"Сумма не должна превышать ваш депозит. На данный момент он составляет "
                                  f"{client.deposit} руб.")
         else:
             try:
-                await notify_admin_about_withdrawal(client, amount, client.card_number)
+                withdrawal_sum, commission = count_commission(amount)
+                await message.answer(f"Вы выводите {amount} руб.\n"
+                                     f"На карту получите {withdrawal_sum} руб\n"
+                                     f"Комиссия за вывод составит {commission} руб")
+                await notify_admin_about_withdrawal(client, amount, client.card_number, withdrawal_sum, commission)
                 await message.answer("Запрос отправлен администратору. Ожидайте ответ", reply_markup=main_markup)
             except ValueError:
                 await message.answer("При отправке данных администратору возникла непредвиденная ошибка. "

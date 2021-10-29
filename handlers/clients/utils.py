@@ -1,4 +1,5 @@
 from re import findall
+from handlers.admins.utils import TEN_PERCENT
 
 
 def only_cyrillic(string):
@@ -43,5 +44,12 @@ def correct_card_number(card_number):
 def split_card_number(card_number):
     card_number = card_number.replace(' ', '')
     return f'{card_number[:4]} {card_number[4:8]} {card_number[8:12]} {card_number[12:16]}'
+
+
+def count_commission(amount):
+    commission = round(float(amount) * TEN_PERCENT, 2)
+    new_amount = round(float(amount) - commission, 2)
+    return new_amount, commission
+
 
 

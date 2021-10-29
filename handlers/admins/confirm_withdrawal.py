@@ -32,7 +32,7 @@ async def confirm_withdrawal(callback: types.CallbackQuery, callback_data: dict,
             print(e)
             await callback.message.answer("Возникла непредвиденная ошибка")
             return
-        await ClientsModel.update_client(client_telegram_id, deposit=client.deposit - int(amount))
+        await ClientsModel.update_client(client_telegram_id, deposit=client.deposit - float(amount))
         try:
             await notify_client_about_success_withdrawal(client_telegram_id, amount)
             await callback.message.answer("Сообщение успещно отправлено пользователю")
