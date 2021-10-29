@@ -57,7 +57,6 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
                 accrual_from=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,
                 datetime=datetime.now(timezone.utc)
             )
-
     else:
         await state.update_data(client_telegram_id=client_telegram_id, amount=amount)
         await NotifyClients.get_failed_deposit_update_reason.set()

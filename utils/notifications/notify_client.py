@@ -1,10 +1,13 @@
 from .utils import send_message_to_client
 from utils.db_api.db import ClientsModel
+from handlers.admins.utils import TEN_PERCENT
 
 
 async def notify_client_about_success_deposit_update(client_telegram_id, amount):
     client = await ClientsModel.get_client_by_telegram_id(client_telegram_id)
-    text = f"Ваш запрос на пополнение {amount} руб. принят. Ваш депозит на данный момент составляет " \
+    amount = float(amount)
+    update_sum = amount - (amount * TEN_PERCENT)
+    text = f"Вам зачислено {update_sum} руб. Ваш депозит на данный момент составляет " \
            f"{client.deposit} руб."
     await send_message_to_client(client_telegram_id, text)
 

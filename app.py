@@ -10,9 +10,6 @@ async def on_startup(dp):
     import filters
     filters.setup(dp)
     import middlewares
-    
-    # await on_startup_notify(dp)
-    # await set_default_commands(dp)
 
 
 async def on_shutdown(dp):
@@ -31,7 +28,6 @@ def setup_django():
 
 if __name__ == '__main__':
     setup_django()
-    # from utils.set_bot_commands import set_default_commands
     from aiogram import executor
     from handlers import dp
 
