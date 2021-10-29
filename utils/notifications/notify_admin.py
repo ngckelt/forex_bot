@@ -16,9 +16,9 @@ async def notify_admin_about_withdrawal(client, amount, card_number):
     await send_message_to_admin(admin, text, confirm_withdrawal_markup(client.telegram_id, amount))
 
 
-async def notify_admin_about_two_percent_deposit_update(referrer, referral, amount, bonus):
+async def notify_admin_about_one_percent_referral_deposit_update(referrer, referral, amount, bonus):
     admin = await BotAdminsModel.get_active_bot_admin()
-    text = f"Пользователю {get_user_contact(referrer)} был начислен бонус 2% ({bonus} руб.) от суммы {amount} " \
+    text = f"Пользователю {get_user_contact(referrer)} был начислен бонус 1% ({bonus} руб.) от суммы {amount} " \
            f"за пользователя {get_user_contact(referral)}"
     await send_message_to_admin(admin, text)
 

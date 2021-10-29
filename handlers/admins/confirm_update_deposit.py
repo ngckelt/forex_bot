@@ -6,11 +6,11 @@ from loader import dp
 
 from utils.db_api.db import ClientsModel, DepositsModel, ReferralAccrualsModel
 from utils.notifications import notify_client_about_success_deposit_update, notify_client_about_failed_deposit_update, \
-    notify_referrer_about_two_percent_deposit_update, notify_admin_about_two_percent_deposit_update
+    notify_referrer_about_one_percent_deposit_update, notify_admin_about_one_percent_referral_deposit_update
 from filters.admin_filters import AdminOnly
 from keyboards.inline.admin import confirm_update_deposit_callback
 from states.admins import NotifyClients
-from .utils import count_deposit, count_referrer_two_percent_deposit_update
+from .utils import count_deposit, count_referrer_one_percent_deposit_update
 from data.config import DEFAULT_USERNAME
 
 
@@ -46,11 +46,11 @@ async def confirm_update_deposit(callback: types.CallbackQuery, callback_data: d
                                           f"Возможно, он удалил чат с ботом")
 
         if client.referer:
-            bonus = count_referrer_two_percent_deposit_update(int(amount))
+            bonus = count_referrer_one_percent_deposit_update(int(amount))
             referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
             await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + bonus)
-            await notify_referrer_about_two_percent_deposit_update(referrer.telegram_id, client, bonus)
-            await notify_admin_about_two_percent_deposit_update(referrer, client, amount, bonus)
+            await notify_referrer_about_one_percent_deposit_update(referrer.telegram_id, client, bonus)
+            await notify_admin_about_one_percent_referral_deposit_update(referrer, client, amount, bonus)
             await ReferralAccrualsModel.add_referral_accrual(
                 amount=bonus,
                 accrual_to=referrer.username if referrer.username != DEFAULT_USERNAME else referrer.telegram_id,

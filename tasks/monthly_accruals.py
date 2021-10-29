@@ -2,7 +2,7 @@ from pprint import pprint
 
 from utils.db_api.db import ClientsModel, ReferralAccrualsModel, DepositsModel, WithdrawalsModel
 from handlers.admins.utils import get_delta_days, get_current_month_number, get_month_days_quantity, TEN_PERCENT, \
-    ONE_PERCENT
+    ONE_PERCENT, get_current_month_day
 from datetime import datetime, timezone, timedelta
 from utils.notifications import notify_referrer_about_month_deposit_update, notify_admin_about_month_deposit_update, \
     notify_client_about_month_deposit_update, notify_admin_about_one_percent_deposit_update
@@ -31,7 +31,8 @@ async def get_previous_month_deposit_updates(client):
 
 
 async def accrual_months_percents():
-    now = datetime.now(timezone.utc)
+    # if get_current_month_day() != 1:
+    #     return
     previous_month_number = get_current_month_number() - 1
     previous_month_days_quantity = get_month_days_quantity(previous_month_number)
     clients = await ClientsModel.get_clients()

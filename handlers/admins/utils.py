@@ -1,8 +1,12 @@
 from datetime import datetime, timezone
 
 TEN_PERCENT = 10 / 100
-TWO_PERCENT = 2 / 100
+# TWO_PERCENT = 2 / 100
 ONE_PERCENT = 1 / 100
+
+
+def get_current_month_day():
+    return int(datetime.now(timezone.utc).strftime('%d'))
 
 
 def get_current_month_number():
@@ -25,8 +29,8 @@ def count_deposit(current_deposit, amount, last_deposit_update_date):
     return current_deposit + amount + bonus
 
 
-def count_referrer_two_percent_deposit_update(amount):
-    return amount * TWO_PERCENT
+def count_referrer_one_percent_deposit_update(amount):
+    return amount * ONE_PERCENT
 
 
 if __name__ == '__main__':
