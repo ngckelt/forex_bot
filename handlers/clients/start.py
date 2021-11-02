@@ -31,7 +31,7 @@ async def start(message: types.Message, state: FSMContext):
             text=await BotTextsModel.get_bot_text_by_item(BotTexts.bot_owner),
         )
 
-        await message.answer("Напишите свою фамлмю, свое имя и свое отчество через пробел")
+        await message.answer("Напишите свою фамилию, свое имя и свое отчество через пробел")
         await RegisterClient.get_full_name.set()
     else:
         await message.answer("Вы уже использовали данную команду")
