@@ -34,7 +34,7 @@ async def start(message: types.Message, state: FSMContext):
         await message.answer("Напишите свою фамилию, свое имя и свое отчество через пробел")
         await RegisterClient.get_full_name.set()
     else:
-        await message.answer("Вы уже использовали данную команду")
+        await message.answer("Вы уже использовали данную команду", reply_markup=main_markup)
 
 
 @dp.message_handler(state=RegisterClient.get_full_name)
