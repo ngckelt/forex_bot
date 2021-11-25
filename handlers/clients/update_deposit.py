@@ -67,6 +67,7 @@ async def get_amount(message: types.Message, state: FSMContext):
             await message.answer(f"Депозит будет пополнен на {deposit} руб\n"
                                  f"Комиссия за пополнение составила {commission} руб")
             await message.answer("Заявка отправлена администратору. Ожидайте ответ", reply_markup=main_markup)
+            await state.finish()
         except ValueError:
             await message.answer("При отправке данных администратору возникла непредвиденная ошибка. "
                                  "Повторите попытку позже", reply_markup=main_markup)
