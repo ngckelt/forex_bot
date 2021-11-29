@@ -10,8 +10,9 @@ from .utils import correct_full_name, correct_card_number, split_card_number
 from data.config import BotTexts
 
 
-@dp.message_handler(CommandStart())
+@dp.message_handler(CommandStart(), state="*")
 async def start(message: types.Message, state: FSMContext):
+    await state.finish()
     client = await ClientsModel.get_client_by_telegram_id(message.from_user.id)
     if client is None:
         referer_telegram_id = message.get_args()

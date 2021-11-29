@@ -71,6 +71,7 @@ async def get_withdrawal_amount(message: types.Message, state: FSMContext):
                                      f"Комиссия за вывод составит {commission} руб")
                 await notify_admin_about_withdrawal(client, amount, client.card_number, withdrawal_sum, commission)
                 await message.answer("Запрос отправлен администратору. Ожидайте ответ", reply_markup=main_markup)
+                await state.finish()
             except ValueError:
                 await message.answer("При отправке данных администратору возникла непредвиденная ошибка. "
                                      "Повторите попытку позже", reply_markup=main_markup)
