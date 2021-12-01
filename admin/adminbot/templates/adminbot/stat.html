@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+
+{% block branding %}
+        <a href="/stat/" class="">Статистика</a> /
+        <a href="/admin">Админ панель</a>
+{% endblock %}
+
+{% block content %}
+    <h2>Общая сумма депозитов: {{ amount }} р.</h2>
+{% endblock content %}
+
+
