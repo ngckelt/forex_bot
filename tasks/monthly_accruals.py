@@ -37,37 +37,37 @@ async def accrual_months_percents():
     previous_month_days_quantity = get_month_days_quantity(previous_month_number)
     clients = await ClientsModel.get_clients()
     for client in clients:
-        if not await has_withdrawals(client):
-            previous_month_deposit_updates = await get_previous_month_deposit_updates(client)
-            bonus = 0
-            for deposit_update in previous_month_deposit_updates:
-                delta_days = previous_month_days_quantity - int(deposit_update.datetime.strftime('%d')) + 1
-                percent = delta_days / previous_month_days_quantity * TEN_PERCENT
-                bonus += round(float(deposit_update.amount) * percent, 2)
+        # if not await has_withdrawals(client):
+        previous_month_deposit_updates = await get_previous_month_deposit_updates(client)
+        bonus = 0
+        for deposit_update in previous_month_deposit_updates:
+            delta_days = previous_month_days_quantity - int(deposit_update.datetime.strftime('%d')) + 1
+            percent = delta_days / previous_month_days_quantity * TEN_PERCENT
+            bonus += round(float(deposit_update.amount) * percent, 2)
 
-            await ClientsModel.update_client(client.telegram_id, deposit=client.deposit + bonus)
-            await notify_admin_about_month_deposit_update(client, bonus)
-            await notify_client_about_month_deposit_update(client.telegram_id, bonus, client.deposit + bonus)
+        await ClientsModel.update_client(client.telegram_id, deposit=client.deposit + bonus)
+        await notify_admin_about_month_deposit_update(client, bonus)
+        await notify_client_about_month_deposit_update(client.telegram_id, bonus, client.deposit + bonus)
 
-            await MonthlyAccrualsModel.add_monthly_accrual(
-                client_username=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,
-                amount=bonus,
+        await MonthlyAccrualsModel.add_monthly_accrual(
+            client_username=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,
+            amount=bonus,
+            datetime=datetime.now(timezone.utc)
+        )
+
+        if client.referer:
+            referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
+            referer_bonus = round(client.deposit * ONE_PERCENT, 2)
+            await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + referer_bonus)
+            await notify_referrer_about_month_deposit_update(referrer.telegram_id, client, referer_bonus)
+            await notify_admin_about_one_percent_deposit_update(referrer, client.telegram_id,
+                                                                referer_bonus)
+            await ReferralAccrualsModel.add_referral_accrual(
+                amount=referer_bonus,
+                accrual_to=referrer.username if referrer.username != DEFAULT_USERNAME else referrer.telegram_id,
+                accrual_from=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,
                 datetime=datetime.now(timezone.utc)
             )
-
-            if client.referer:
-                referrer = await ClientsModel.get_client_by_telegram_id(client.referer)
-                referer_bonus = round(client.deposit * ONE_PERCENT, 2)
-                await ClientsModel.update_client(referrer.telegram_id, deposit=referrer.deposit + referer_bonus)
-                await notify_referrer_about_month_deposit_update(referrer.telegram_id, client, referer_bonus)
-                await notify_admin_about_one_percent_deposit_update(referrer, client.telegram_id,
-                                                                    referer_bonus)
-                await ReferralAccrualsModel.add_referral_accrual(
-                    amount=referer_bonus,
-                    accrual_to=referrer.username if referrer.username != DEFAULT_USERNAME else referrer.telegram_id,
-                    accrual_from=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,
-                    datetime=datetime.now(timezone.utc)
-                )
 
 
 

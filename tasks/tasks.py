@@ -8,7 +8,7 @@ BASE_SLEEP_SECONDS = 1
 async def setup():
     # aioschedule.every().minute.do(accrual_months_percents)
     # aioschedule.every().day.at("00:00").do(accrual_months_percents)
-    aioschedule.every().day.at("15:30").do(accrual_months_percents)
+    aioschedule.every().day.at("10:00").do(accrual_months_percents)
 
     while True:
         await aioschedule.run_pending()
