@@ -22,7 +22,10 @@ async def has_withdrawals(client):
 
 async def get_previous_month_deposit_updates(client):
     updates = list()
-    previous_month_number = get_current_month_number() - 1
+    if get_current_month_number() == 1:
+        previous_month_number = 12
+    else:
+        previous_month_number = get_current_month_number() - 1
     deposit_updates = await DepositsModel.get_client_deposits(client.telegram_id)
     for deposit_update in deposit_updates:
         if int(deposit_update.datetime.strftime('%m')) == previous_month_number:
@@ -33,21 +36,25 @@ async def get_previous_month_deposit_updates(client):
 async def accrual_months_percents():
     if get_current_month_day() != 1:
         return
-    previous_month_number = get_current_month_number() - 1
+    if get_current_month_number() == 1:
+        previous_month_number = 12
+    else:
+        previous_month_number = get_current_month_number() - 1
     previous_month_days_quantity = get_month_days_quantity(previous_month_number)
     clients = await ClientsModel.get_clients()
     for client in clients:
         # if not await has_withdrawals(client):
         previous_month_deposit_updates = await get_previous_month_deposit_updates(client)
-        bonus = 0
-        for deposit_update in previous_month_deposit_updates:
-            delta_days = previous_month_days_quantity - int(deposit_update.datetime.strftime('%d')) + 1
-            percent = delta_days / previous_month_days_quantity * TEN_PERCENT
-            bonus += round(float(deposit_update.amount) * percent, 2)
+        bonus = round(client.deposit * TEN_PERCENT, 2)
+        if len(previous_month_deposit_updates):
+            for deposit_update in previous_month_deposit_updates:
+                delta_days = previous_month_days_quantity - int(deposit_update.datetime.strftime('%d')) + 1
+                percent = delta_days / previous_month_days_quantity * TEN_PERCENT
+                bonus += round(float(deposit_update.amount) * percent, 2)
 
-        await ClientsModel.update_client(client.telegram_id, deposit=client.deposit + bonus)
+        await ClientsModel.update_client(client.telegram_id, deposit=round(client.deposit + bonus, 2))
         await notify_admin_about_month_deposit_update(client, bonus)
-        await notify_client_about_month_deposit_update(client.telegram_id, bonus, client.deposit + bonus)
+        await notify_client_about_month_deposit_update(client.telegram_id, bonus, round(client.deposit + bonus, 2))
 
         await MonthlyAccrualsModel.add_monthly_accrual(
             client_username=client.username if client.username != DEFAULT_USERNAME else client.telegram_id,

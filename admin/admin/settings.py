@@ -126,6 +126,8 @@ LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Europe/Moscow'
 
+# TIME_ZONE = 'Asia/Novosibirsk'
+
 USE_I18N = True
 
 USE_L10N = True
